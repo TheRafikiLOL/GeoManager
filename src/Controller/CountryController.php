@@ -9,12 +9,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\GlobalController;
 
 class CountryController extends AbstractController
 {
+
+    // ----------- //
+    // -- RUTAS -- //
+    // ----------- //
+
     #[Route('/countries', name: 'app_country')]
-    public function index(CountryRepository $countryRepository): Response
-    {
+    public function index(CountryRepository $countryRepository): Response {
+
         $countries = $countryRepository->findAll();
 
         return $this->render('country/index.html.twig', [
@@ -75,4 +81,11 @@ class CountryController extends AbstractController
 
         return $this->redirectToRoute('app_country', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    // ------------------- //
+    // -- FUNCIONES API -- //
+    // ------------------- //
+
+
 }
