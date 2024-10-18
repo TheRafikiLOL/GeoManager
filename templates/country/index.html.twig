@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Countries{% endblock %}
+
+{% block body %}
+    <h1>Countries</h1>
+
+    <a href="{{ path('app_country_create') }}" class="btn btn-primary">Create New Country</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for country in countries %}
+                <tr>
+                    <td>{{ country.id }}</td>
+                    <td>{{ country.name }}</td>
+                    <td>
+                        <a href="{{ path('app_country_view', {'id': country.id}) }}" class="btn btn-info">View</a>
+                        <a href="{{ path('app_country_edit', {'id': country.id}) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ path('app_country_delete', {'id': country.id}) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ country.id) }}">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No countries found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

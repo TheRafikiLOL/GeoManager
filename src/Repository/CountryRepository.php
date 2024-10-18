@@ -16,6 +16,28 @@ class CountryRepository extends ServiceEntityRepository
         parent::__construct($registry, Country::class);
     }
 
+    public function save(Country $country, bool $flush = true): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $entityManager->persist($country);
+
+        if ($flush) {
+            $entityManager->flush();
+        }
+    }
+
+    public function remove(Country $entity, bool $flush = true): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $entityManager->remove($entity);
+
+        if ($flush) {
+            $entityManager->flush();
+        }
+    }
+
     //    /**
     //     * @return Country[] Returns an array of Country objects
     //     */

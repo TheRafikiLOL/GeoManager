@@ -1,0 +1,24 @@
+{# templates/country/show.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Country Details</h1>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <td>{{ country.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ country.name }}</td>
+        </tr>
+        {# Agrega otros campos que quieras mostrar aquí #}
+    </table>
+
+    <div>
+        <a href="{{ path('app_country_edit', {'id': country.id}) }}">Edit</a>
+        <a href="{{ path('app_country') }}">Back to list</a>
+    </div>
+{% endblock %}

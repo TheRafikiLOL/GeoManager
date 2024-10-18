@@ -1,0 +1,14 @@
+{# templates/country/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Edit Country</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Save changes</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_country') }}">Back to list</a>
+{% endblock %}
