@@ -1,0 +1,13 @@
+/* -- BOOTSTRAPP -- */
+
+.btn-info {
+    color: #FFF!important;
+}
+
+/* -- COUNTRIES -- */
+
+/* - Datatable */
+
+#countriesTable img.table-flag {
+    max-width: 80px;
+}

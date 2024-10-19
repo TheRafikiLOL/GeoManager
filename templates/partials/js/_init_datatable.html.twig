@@ -1,0 +1,36 @@
+<script>
+    $(document).ready(function() {
+        var table = $('{{ tableId }}').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
+            },
+            order: [{{ orderColumn|raw }}],
+            columnDefs: [
+                {% for col in columnDefs %}
+                    { orderable: {{ col.orderable|lower }}, targets: {{ col.targets|json_encode|raw }} },
+                {% endfor %}
+                { responsivePriority: 1, targets: -1 } // Asegura que la última columna (acciones) siempre sea visible
+            ],
+            responsive: {
+                details: {
+                    type: 'column', // Muestra los detalles en una columna adicional
+                    target: -1 // El objetivo de los detalles es la última columna
+                }
+            },
+            initComplete: function() {
+                var api = this.api();
+                api.columns().every(function(index) {
+                    // Se verifica si la columna es filtrable
+                    if (this.index() in {{ searchableColumns|json_encode }}) {
+                        var column = this;
+                        $('input', $(column.footer())).on('keyup change clear', function() {
+                            if (column.search() !== this.value) {
+                                column.search(this.value).draw();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>

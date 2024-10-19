@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-    console.log("dsa")
-
     // Cargar el modal del index para sincronizar todos los paises
     $('#syncCountries').on('click', function(e) {
         e.preventDefault();
