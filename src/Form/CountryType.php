@@ -20,22 +20,39 @@ class CountryType extends AbstractType
             ->add('fullname')
             ->add('region')
             ->add('subregion')
+            ->add('capital')
             ->add('area')
             ->add('population')
             ->add('flag')
             ->add('alpha2code')
             ->add('alpha3code')
             ->add('numericcode')
-            ->add('languages', EntityType::class, [
+            /*->add('languages', EntityType::class, [
                 'class' => Language::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
-            ])
-            ->add('currencies', EntityType::class, [
+                'expanded' => false,
+                'placeholder' => 'Seleccione idiomas',
+                'required' => false,
+                'attr' => [
+                    'class'            => 'form-control select2',
+                    'data-allow-clear' => 'true',
+                    'data-tags'        => 'true'
+                ]
+            ])*/
+            /*->add('currencies', EntityType::class, [
                 'class' => Currency::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
-            ])
+                'expanded' => false,
+                'placeholder' => 'Seleccione monedas',
+                'required' => false,
+                'attr' => [
+                    'class'            => 'form-control select2',
+                    'data-allow-clear' => 'true',
+                    'data-tags'        => 'true'
+                ]
+            ])*/
         ;
     }
 

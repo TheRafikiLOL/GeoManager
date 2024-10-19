@@ -1,0 +1,146 @@
+{{ form_start(form, {'attr': {'class': 'form'}}) }}
+
+    <div class="row">
+        <div class="col-12 col-md-2">
+            <div class="mb-3">
+                {{ form_label(form.code, 'Código', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.code, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.code) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.flag, 'Bandera', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.flag, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.flag) }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-12 col-md-5">
+            <div class="mb-3">
+                {{ form_label(form.name, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-md-5">
+            <div class="mb-3">
+                {{ form_label(form.fullname, 'Nombre completo', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.fullname, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.fullname) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.region, 'Región', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.region, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.region) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.subregion, 'Subregión', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.subregion, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.subregion) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.capital, 'Capital', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.capital, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.capital) }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.area, 'Área', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.area, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.area) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.population, 'Población', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.population, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.population) }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {% include 'partials/_field_select2.html.twig' with {
+                    'label': 'Idiomas',
+                    'name': 'languages[]',
+                    'id': 'country_languages',
+                    'options': languagesOptions
+                } %}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {# {{ form_label(form.currencies, 'Monedas', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.currencies) }}
+                {{ form_errors(form.currencies) }} #}
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.alpha2code, 'Alpha2Code', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.alpha2code, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.alpha2code) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.alpha3code, 'Alpha3Code', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.alpha3code, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.alpha3code) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="mb-3">
+                {{ form_label(form.numericcode, 'NumericCode', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.numericcode, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.numericcode) }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="actions text-end">
+        <a href="{{ path('app_country') }}" class="btn btn-secondary">Volver</a>
+        <button type="submit" class="btn btn-{{class}}">{{ saveAction }}</button>
+    </div>
+
+{{ form_end(form) }}

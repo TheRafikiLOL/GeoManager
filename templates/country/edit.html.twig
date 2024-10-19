@@ -2,13 +2,19 @@
 
 {% extends 'base.html.twig' %}
 
+{% block title %}Editar País - {{country.name}}{% endblock %}
+
 {% block body %}
-    <h1>Edit Country</h1>
+    <h1>Editar País - {{country.name}}</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit">Save changes</button>
-    {{ form_end(form) }}
+    {% include 'country/_form.html.twig' with {'saveAction': 'Editar', 'class':'primary'} %}
 
-    <a href="{{ path('app_country') }}">Back to list</a>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'partials/js/_init_select2.html.twig' with {'url':'/autocomplete/languages'} %}
+
 {% endblock %}

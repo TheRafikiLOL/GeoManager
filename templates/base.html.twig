@@ -10,6 +10,8 @@
         <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         {# Font Awesome CSS #}
         <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
+        {# Select2 CSS #}
+        <link href="{{ asset('select2/css/select2.min.css') }}" rel="stylesheet">
 
         {% block stylesheets %}
         {% endblock %}
@@ -55,6 +57,10 @@
 
         {# Bootstrap Bundle JS (con Popper.js) #}
         <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        {# jQuery #}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {# Select2 JS #}
+        <script src="{{ asset('select2/js/select2.min.js') }}"></script>
 
         {% block javascripts %}
         {% endblock %}

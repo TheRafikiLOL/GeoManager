@@ -31,7 +31,10 @@ class Country
     private ?string $subregion = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $area = null;
+    private ?string $capital = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $area = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $population = null;
@@ -137,13 +140,26 @@ class Country
 
         return $this;
     }
+    
+    public function getCapital(): ?string
+    {
+        return $this->capital;
+    }
 
-    public function getArea(): ?string
+    public function setCapital(?string $capital): static
+    {
+        $this->capital = $capital;
+
+        return $this;
+    }
+    
+
+    public function getArea(): ?int
     {
         return $this->area;
     }
 
-    public function setArea(?string $area): static
+    public function setArea(?int $area): static
     {
         $this->area = $area;
 

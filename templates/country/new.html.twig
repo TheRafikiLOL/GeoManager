@@ -1,9 +1,12 @@
 {# templates/country/new.html.twig #}
-<h1>Create Country</h1>
 
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit" class="btn btn-primary">Create</button>
-{{ form_end(form) }}
+{% block title %}Nuevo País{% endblock %}
 
-<a href="{{ path('app_country') }}" class="btn btn-secondary">Back to List</a>
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Nuevo País</h1>
+
+    {% include 'country/_form.html.twig' with {'saveAction':'Crear', 'class':'success'} %}
+
+{% endblock %}
