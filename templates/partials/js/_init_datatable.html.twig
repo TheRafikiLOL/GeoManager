@@ -20,11 +20,11 @@
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
             },
-            order: [[1, 'asc']], // Ordenar por nombre
+            order: [[1, 'asc']],
             initComplete: function() {
                 var api = this.api();
                 api.columns().every(function(index) {
-                    if (this.index() > 0 && this.index() < 6) { // Evita las columnas que no son filtrables
+                    if (this.index() > 0 && this.index() < 6) {
                         var column = this;
                         $('input', $(column.footer())).on('keyup change clear', function() {
                             if (column.search() !== this.value) {

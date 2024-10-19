@@ -27,25 +27,85 @@ class DatatableController extends AbstractController
         $start = (int) $request->query->get('start', 0);
         $length = (int) $request->query->get('length', 10);
 
-        // Obtener datos de la base de datos
+        // Crear el query builder
         $queryBuilder = $countryRepository->createQueryBuilder('c');
 
-        // Contar total de registros
+        if (isset($_REQUEST['columns'])) {
+            foreach ($_REQUEST['columns'] as $index => $column) {
+                $searchValue = $column['search']['value'] ?? '';
+
+                if ($index == 1 && !empty($searchValue)) {
+                    $queryBuilder->andWhere('c.name LIKE :searchName')
+                                 ->setParameter('searchName', '%' . $searchValue . '%');
+                }
+
+                if ($index == 2 && !empty($searchValue)) {
+                    $queryBuilder->andWhere('c.region LIKE :searchRegion')
+                                 ->setParameter('searchRegion', '%' . $searchValue . '%');
+                }
+
+                if ($index == 3 && !empty($searchValue)) {
+                    $queryBuilder->andWhere('c.subregion LIKE :searchSubregion')
+                                 ->setParameter('searchSubregion', '%' . $searchValue . '%');
+                }
+
+                if ($index == 4 && !empty($searchValue)) {
+                    $queryBuilder->andWhere('c.area = :searchArea')
+                                    ->setParameter('searchArea', $searchValue);
+                }
+
+                if ($index == 5 && !empty($searchValue)) {
+                    $queryBuilder->andWhere('c.population = :searchPopulation')
+                                    ->setParameter('searchPopulation', $searchValue);
+                }
+
+            }
+        }
+
+        $order = $_REQUEST['order'] ?? null;
+        if ($order) {
+            $columnIndex = $order[0]['column'];
+            $direction = $order[0]['dir'];
+            
+            switch ($columnIndex) {
+                case 1:
+                    $queryBuilder->orderBy('c.name', $direction);
+                    break;
+                case 2:
+                    $queryBuilder->orderBy('c.region', $direction);
+                    break;
+                case 3:
+                    $queryBuilder->orderBy('c.subregion', $direction);
+                    break;
+                case 4:
+                    $queryBuilder->orderBy('c.area', $direction);
+                    break;
+                case 5:
+                    $queryBuilder->orderBy('c.population', $direction);
+                    break;
+            }
+        }
+
+
+        // Cargar la paginación
+        $queryBuilder->setFirstResult($start)
+                    ->setMaxResults($length);
+
+        $filteredRecords = (clone $queryBuilder)
+            ->select('COUNT(c.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $countries = $queryBuilder->getQuery()->getResult();
+
         $totalRecords = $countryRepository->count([]);
 
-        // Obtener registros con paginación
-        $countries = $queryBuilder
-            ->setFirstResult($start)
-            ->setMaxResults($length)
-            ->getQuery()
-            ->getResult();
+        
 
         $data = [];
         foreach ($countries as $country) {
-            // Generar el token CSRF para la acción de eliminar
             $csrfToken = $this->csrfTokenManager->getToken('delete' . $country->getId())->getValue();
 
-            // Rellenar las columnas de datos, incluyendo las acciones
             $data[] = [
                 'flag' => $country->getFlag() ? '<img class="table-flag" src="' . $country->getFlag() . '" alt="' . $country->getCode() . '">' : null,
                 'name' => $country->getName(),
@@ -69,12 +129,12 @@ class DatatableController extends AbstractController
             ];
         }
 
-        // Respuesta en formato JSON para DataTables
         return new JsonResponse([
             'draw' => $draw,
             'recordsTotal' => $totalRecords,
-            'recordsFiltered' => $totalRecords, // No hay filtrado, por lo tanto el total filtrado es igual al total
+            'recordsFiltered' => $filteredRecords,
             'data' => $data,
         ]);
     }
+
 }
