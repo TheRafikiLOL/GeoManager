@@ -75,12 +75,15 @@ class CountryController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_country_edit')]
     public function edit(Request $request, Country $country, CountryRepository $countryRepository): Response {
+
+        $oldFilePath  = $country->getFlag();
+
         $form = $this->createForm(CountryType::class, $country);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            self::manageRegister($country, $request, $countryRepository, true);
+            self::manageRegister($country, $request, $countryRepository, true, $oldFilePath);
         }
 
         return $this->render('country/edit.html.twig', [
@@ -184,7 +187,7 @@ class CountryController extends AbstractController
     // -- FUNCIONES INTERNAS -- //
     // ------------------------ //
 
-    private function manageRegister(Country $country, Request $request, CountryRepository $countryRepository, $edit = false) {
+    private function manageRegister(Country $country, Request $request, CountryRepository $countryRepository, $edit = false, $oldFilePath) {
 
         // Control de relaciones en idiomas
         $languagesIds = $request->get('languages', []);
@@ -239,6 +242,25 @@ class CountryController extends AbstractController
                 }
             }
         }
+
+
+        // Control de bandera
+        $file = $request->files->get('country')['flag'] ?? null;
+
+        if ($file) {
+            $filename = uniqid() . '.' . $file->guessExtension();
+            $directory = $this->getParameter('kernel.project_dir') . '\public\uploads\flags';
+
+            if ($edit && $country->getFlag()) {
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
+                }
+            }
+            
+            $file->move($directory, $filename);
+            $country->setFlag('uploads/flags/' . $filename);
+        }
+
 
         
         $countryRepository->save($country, true);

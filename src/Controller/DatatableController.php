@@ -30,6 +30,7 @@ class DatatableController extends AbstractController
         // Crear el query builder
         $queryBuilder = $countryRepository->createQueryBuilder('c');
 
+        // Aplicar filtros
         if (isset($_REQUEST['columns'])) {
             foreach ($_REQUEST['columns'] as $index => $column) {
                 $searchValue = $column['search']['value'] ?? '';
@@ -51,22 +52,22 @@ class DatatableController extends AbstractController
 
                 if ($index == 4 && !empty($searchValue)) {
                     $queryBuilder->andWhere('c.area = :searchArea')
-                                    ->setParameter('searchArea', $searchValue);
+                                 ->setParameter('searchArea', $searchValue);
                 }
 
                 if ($index == 5 && !empty($searchValue)) {
                     $queryBuilder->andWhere('c.population = :searchPopulation')
-                                    ->setParameter('searchPopulation', $searchValue);
+                                 ->setParameter('searchPopulation', $searchValue);
                 }
-
             }
         }
 
+        // Aplicar ordenamiento
         $order = $_REQUEST['order'] ?? null;
         if ($order) {
             $columnIndex = $order[0]['column'];
             $direction = $order[0]['dir'];
-            
+
             switch ($columnIndex) {
                 case 1:
                     $queryBuilder->orderBy('c.name', $direction);
@@ -86,21 +87,20 @@ class DatatableController extends AbstractController
             }
         }
 
-
-        // Cargar la paginación
-        $queryBuilder->setFirstResult($start)
-                    ->setMaxResults($length);
-
+        // Obtener el conteo de registros filtrados
         $filteredRecords = (clone $queryBuilder)
             ->select('COUNT(c.id)')
             ->getQuery()
             ->getSingleScalarResult();
 
-        $countries = $queryBuilder->getQuery()->getResult();
+        // Cargar la paginación
+        $countries = $queryBuilder->setFirstResult($start)
+                                   ->setMaxResults($length)
+                                   ->getQuery()
+                                   ->getResult();
 
+        // Total de registros sin filtrar
         $totalRecords = $countryRepository->count([]);
-
-        
 
         $data = [];
         foreach ($countries as $country) {
@@ -136,5 +136,4 @@ class DatatableController extends AbstractController
             'data' => $data,
         ]);
     }
-
 }

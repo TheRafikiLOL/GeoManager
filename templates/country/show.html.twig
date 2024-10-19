@@ -9,7 +9,7 @@
         <div class="card-header">
             <h5 class="card-title">{{ country.name }} ({{ country.code }})</h5>
             {% if country.flag is defined and country.flag is not null %}
-                <img class="img-fluid" src="{{ country.flag }}" alt="{{ country.name }} Flag" style="max-width: 150px;">
+                <img class="table-flag" src="/{{ country.flag }}" alt="">
             {% else %}
                 <p>Sin bandera disponible</p>
             {% endif %}

@@ -11,3 +11,7 @@
 #countriesTable img.table-flag {
     max-width: 80px;
 }
+
+.table-flag {
+    max-width: 200px;
+}

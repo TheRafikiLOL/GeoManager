@@ -11,6 +11,14 @@
 
         <div class="col-12 col-sm-6 col-md-4">
             <div class="mb-3">
+
+                {% if country is defined and country is not null and country.flag %}
+                    <div class="col-12">
+                        <h5>Bandera actual:</h5>
+                        <img src="{{ asset(country.flag) }}" alt="{{ country.name }} - Bandera" class="img-fluid" style="max-width: 100%; height: auto;">
+                    </div>
+                {% endif %}
+
                 {{ form_label(form.flag, 'Bandera', {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.flag, {'attr': {'class': 'form-control'}}) }}
                 {{ form_errors(form.flag) }}

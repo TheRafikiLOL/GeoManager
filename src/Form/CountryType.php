@@ -3,10 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Country;
-use App\Entity\Currency;
-use App\Entity\Language;
+use App\Form\Transformer\FlagToFileTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,34 +23,14 @@ class CountryType extends AbstractType
             ->add('capital')
             ->add('area')
             ->add('population')
-            ->add('flag')
-            /*->add('languages', EntityType::class, [
-                'class' => Language::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'expanded' => false,
-                'placeholder' => 'Seleccione idiomas',
+            ->add('flag', FileType::class, [
+                'label' => 'Bandera (PNG o JPG)',
                 'required' => false,
-                'attr' => [
-                    'class'            => 'form-control select2',
-                    'data-allow-clear' => 'true',
-                    'data-tags'        => 'true'
-                ]
-            ])*/
-            /*->add('currencies', EntityType::class, [
-                'class' => Currency::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'expanded' => false,
-                'placeholder' => 'Seleccione monedas',
-                'required' => false,
-                'attr' => [
-                    'class'            => 'form-control select2',
-                    'data-allow-clear' => 'true',
-                    'data-tags'        => 'true'
-                ]
-            ])*/
+            ])
         ;
+
+        // Agregar el transformador para el campo 'flag'
+        $builder->get('flag')->addModelTransformer(new FlagToFileTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void
