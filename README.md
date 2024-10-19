@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# GeoManager
-=======
 # GeoManager
 
 ## Índice
@@ -85,4 +82,3 @@ Cuando el servidor esté activo, podrás acceder a la aplicación a través de l
 - [FontAwesome](https://fontawesome.com/).
 - [DataTables](https://datatables.net/).
 - [Select2](https://select2.org/).
->>>>>>> dev
