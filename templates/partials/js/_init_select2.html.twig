@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function() {
-        $('.select2').select2({
+        $('{{ fieldId }}').select2({
             tags:{% if tags is defined and tags %}true{% else %}false{% endif %},
             placeholder: 'Seleccione un valor',
             allowClear: true,

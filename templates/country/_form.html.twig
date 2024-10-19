@@ -101,9 +101,12 @@
 
         <div class="col-12 col-sm-6 col-md-4">
             <div class="mb-3">
-                {# {{ form_label(form.currencies, 'Monedas', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.currencies) }}
-                {{ form_errors(form.currencies) }} #}
+                {% include 'partials/_field_select2.html.twig' with {
+                    'label': 'Monedas',
+                    'name': 'currencies[]',
+                    'id': 'country_currencies',
+                    'options': currenciesOptions
+                } %}
             </div>
         </div>
 

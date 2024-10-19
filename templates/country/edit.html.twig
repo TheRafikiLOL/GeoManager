@@ -15,6 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% include 'partials/js/_init_select2.html.twig' with {'url':'/autocomplete/languages'} %}
+    {% include 'partials/js/_init_select2.html.twig' with {'fieldId':'#country_languages', 'url':'/autocomplete/languages'} %}
+    {% include 'partials/js/_init_select2.html.twig' with {'fieldId':'#country_currencies', 'url':'/autocomplete/currencies'} %}
 
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Country;
 use App\Entity\Language;
+use App\Entity\Currency;
 use App\Form\CountryType;
 use App\Repository\CountryRepository;
 use App\Repository\LanguageRepository;
@@ -70,7 +71,8 @@ class CountryController extends AbstractController
         return $this->render('country/edit.html.twig', [
             'form' => $form->createView(),
             'country' => $country,
-            'languagesOptions' => self::getLanguageSelectOptions($country)
+            'languagesOptions' => self::getLanguagesSelectOptions($country),
+            'currenciesOptions' => self::getCurrenciesSelectOptions($country)
         ]);
     }
 
@@ -92,36 +94,59 @@ class CountryController extends AbstractController
     private function manageRegister(Country $country, Request $request, CountryRepository $countryRepository, $edit = false) {
 
         // Control de relaciones en idiomas
-        $languagesIds = $request->get('languages');
-        if ( !empty($languagesIds) ) {
+        $languagesIds = $request->get('languages', []);
 
-            $languageRepository = $this->entityManager->getRepository(Language::class);
-            
-            if ( !$edit ) {
-                foreach ($languagesIds as $languageId) {
-                    $language = $languageRepository->find($languageId);
-                    $country->addLanguage($language);
-                }
-            } else {
-                $existingLanguages = $country->getLanguages()->toArray();
+        $languageRepository = $this->entityManager->getRepository(Language::class);
+        
+        if ( !$edit ) {
+            foreach ($languagesIds as $languageId) {
+                $language = $languageRepository->find($languageId);
+                $country->addLanguage($language);
+            }
+        } else {
+            $existingLanguages = $country->getLanguages()->toArray();
 
-                foreach ($existingLanguages as $existingLanguage) {
-                    if (!in_array($existingLanguage->getId(), $languagesIds)) {
-                        $country->removeLanguage($existingLanguage);
-                    }
-                }
-
-                foreach ($languagesIds as $languageId) {
-                    if (!$country->getLanguages()->contains($languageId)) {
-                        $language = $languageRepository->find($languageId);
-                        $country->addLanguage($language);
-                    }
+            foreach ($existingLanguages as $existingLanguage) {
+                if (!in_array($existingLanguage->getId(), $languagesIds)) {
+                    $country->removeLanguage($existingLanguage);
                 }
             }
 
+            foreach ($languagesIds as $languageId) {
+                if (!$country->getLanguages()->contains($languageId)) {
+                    $language = $languageRepository->find($languageId);
+                    $country->addLanguage($language);
+                }
+            }
         }
 
         // Control de relaciones en monedas
+        $currenciesIds = $request->get('currencies', []);
+
+        $currencyRepository = $this->entityManager->getRepository(Currency::class);
+        
+        if ( !$edit ) {
+            foreach ($currenciesIds as $currencyId) {
+                $currency = $currencyRepository->find($currencyId);
+                $country->addCurrency($language);
+            }
+        } else {
+            $existingCurrencies = $country->getCurrencies()->toArray();
+
+            foreach ($existingCurrencies as $existingCurrency) {
+                if (!in_array($existingCurrency->getId(), $currenciesIds)) {
+                    $country->removeCurrency($existingCurrency);
+                }
+            }
+
+            foreach ($currenciesIds as $currencyId) {
+                if (!$country->getCurrencies()->contains($currencyId)) {
+                    $currency = $currencyRepository->find($currencyId);
+                    $country->addCurrency($currency);
+                }
+            }
+        }
+
         
         $countryRepository->save($country, true);
         $this->entityManager->flush();
@@ -142,7 +167,7 @@ class CountryController extends AbstractController
     // -- FUNCIONES INTERNAS -- //
     // ------------------------ //
 
-    private function getLanguageSelectOptions(Country $country) {
+    private function getLanguagesSelectOptions(Country $country) {
 
         $relatedLanguages = $country->getLanguages();
 
@@ -150,12 +175,28 @@ class CountryController extends AbstractController
         foreach ($relatedLanguages as $language) {
             $languagesOptions[] = [
                 'id' => $language->getId(),
-                'name' => $language->getName(),
+                'text' => "{$language->getName()} ({$language->getCode()})",
                 'selected' => true
             ];
         }
     
         return $languagesOptions;
+    }
+
+    private function getCurrenciesSelectOptions(Country $country) {
+
+        $relatedCurrencies = $country->getCurrencies();
+
+        $currenciesOptions = [];
+        foreach ($relatedCurrencies as $currency) {
+            $currenciesOptions[] = [
+                'id' => $currency->getId(),
+                'text' => "{$currency->getName()} ({$currency->getSymbol()})",
+                'selected' => true
+            ];
+        }
+    
+        return $currenciesOptions;
     }
 
 
