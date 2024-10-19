@@ -27,6 +27,9 @@ class Currency
     #[ORM\ManyToMany(targetEntity: Country::class, mappedBy: 'currencies')]
     private Collection $countries;
 
+    #[ORM\Column(length: 50)]
+    private ?string $code = null;
+
     public function __construct()
     {
         $this->countries = new ArrayCollection();
@@ -91,6 +94,18 @@ class Currency
         if ($this->countries->removeElement($country)) {
             $country->removeCurrency($this);
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): static
+    {
+        $this->code = $code;
 
         return $this;
     }

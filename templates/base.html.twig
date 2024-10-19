@@ -7,11 +7,11 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 
         {# Bootstrap CSS #}
-        <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         {# Font Awesome CSS #}
-        <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
         {# Select2 CSS #}
-        <link href="{{ asset('select2/css/select2.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet">
 
         {% block stylesheets %}
         {% endblock %}
@@ -32,35 +32,37 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_country') }}">Paises</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_language') }}">Idiomas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_currency') }}">Monedas</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </header>
 
-        {# Contenido Principal #}
         <div class="container mt-4">
             {% block body %}
             {% endblock %}
         </div>
 
-        {# Pie de Página #}
+        {% include 'partials/_modal.html.twig' %}
+
         <footer class="bg-dark text-white text-center py-3 mt-4">
             <p>&copy; {{ 'now'|date('Y') }} GeoManager. Todos los derechos reservados.</p>
         </footer>
 
-        {# Bootstrap Bundle JS (con Popper.js) #}
-        <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         {# jQuery #}
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {# Bootstrap Bundle JS (con Popper.js) #}
+        <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        {# Bootstrap Tooltip #}
+        <script type="text/javascript">
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
+        {# Bootstrap modal #}
+        {% include 'partials/js/_load_page_modal.html.twig' %}
         {# Select2 JS #}
-        <script src="{{ asset('select2/js/select2.min.js') }}"></script>
+        <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
 
         {% block javascripts %}
         {% endblock %}

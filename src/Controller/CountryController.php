@@ -8,24 +8,37 @@ use App\Entity\Currency;
 use App\Form\CountryType;
 use App\Repository\CountryRepository;
 use App\Repository\LanguageRepository;
+use App\Controller\GlobalController;
+use App\Controller\CurrencyController;
+use App\Controller\LanguageController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/countries')]
 class CountryController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+    private LanguageController $languageController;
+    private CurrencyController $currencyController;
 
-    public function __construct(EntityManagerInterface $entityManager) {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LanguageController $languageController,
+        CurrencyController $currencyController
+    ) {
         $this->entityManager = $entityManager;
+        $this->languageController = $languageController;
+        $this->currencyController = $currencyController;
     }
 
     // ----------- //
     // -- RUTAS -- //
     // ----------- //
 
-    #[Route('/countries', name: 'app_country')]
+    #[Route('', name: 'app_country')]
     public function index(CountryRepository $countryRepository): Response {
 
         $countries = $countryRepository->findAll();
@@ -35,7 +48,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/countries/new', name: 'app_country_create')]
+    #[Route('/new', name: 'app_country_create')]
     public function new(Request $request, CountryRepository $countryRepository): Response {
         $country = new Country();
         $form = $this->createForm(CountryType::class, $country);
@@ -47,10 +60,12 @@ class CountryController extends AbstractController
 
         return $this->render('country/new.html.twig', [
             'form' => $form->createView(),
+            'languagesOptions' => '',
+            'currenciesOptions' => ''
         ]);
     }
 
-    #[Route('/countries/{id}', name: 'app_country_view')]
+    #[Route('/{id}', name: 'app_country_view')]
     public function show(Country $country): Response
     {
         return $this->render('country/show.html.twig', [
@@ -58,7 +73,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/countries/{id}/edit', name: 'app_country_edit')]
+    #[Route('/{id}/edit', name: 'app_country_edit')]
     public function edit(Request $request, Country $country, CountryRepository $countryRepository): Response {
         $form = $this->createForm(CountryType::class, $country);
 
@@ -76,7 +91,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/countries/{id}/delete', name: 'app_country_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_country_delete', methods: ['POST'])]
     public function delete(Request $request, Country $country, CountryRepository $countryRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$country->getId(), $request->request->get('_token'))) {
@@ -84,6 +99,82 @@ class CountryController extends AbstractController
         }
 
         return $this->redirectToRoute('app_country', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    // ------------------- //
+    // -- FUNCIONES API -- //
+    // ------------------- //
+
+    #[Route('/api/all', name: 'api_country_sync_all')]
+    public function apiContrySyncAll(CountryRepository $countryRepository, EntityManagerInterface $entityManager): Response {
+        try {
+            $responseData = GlobalController::callToAPI('all');
+
+            if ( !empty($responseData) ) {
+
+                foreach ( $responseData as $countryData ) {
+
+                    $data = [
+                        'code'       => $countryData['cca2'],
+                        'name'       => $countryData['name']['common'],
+                        'fullname'   => array_key_exists('name', $countryData) && array_key_exists('official', $countryData['name']) ? $countryData['name']['official'] : '',
+                        'region'     => array_key_exists('region', $countryData) ? $countryData['region'] : '',
+                        'subregion'  => array_key_exists('subregion', $countryData) ? $countryData['subregion'] : '',
+                        'area'       => array_key_exists('area', $countryData) ? $countryData['area'] : null,
+                        'population' => array_key_exists('population', $countryData) ? $countryData['population'] : 0,
+                        'flag'       => array_key_exists('flags', $countryData) && array_key_exists('png', $countryData['flags']) ? $countryData['flags']['png'] : '',
+                        'capital'    => array_key_exists('capital', $countryData) && is_array($countryData['capital']) && count($countryData['capital']) > 0 ? $countryData['capital'][0] : ''
+                    ];
+
+                    $country = $countryRepository->findOneBy(['code' => $data['code']]);
+
+                    if ( empty($country) ) {
+                        // Se importa uno nuevo
+                        $country = new Country();
+                        $country->setCode($data['code']);
+                        $country->setName($data['name']);
+                        $country->setFullname($data['fullname']);
+                        $country->setRegion($data['region']);
+                        $country->setSubregion($data['subregion']);
+                        $country->setArea($data['area']);
+                        $country->setPopulation($data['population']);
+                        $country->setFlag($data['flag']);
+                        $country->setCapital($data['capital']);
+
+                        $entityManager->persist($country);
+                    } else {
+                        // Se actualizan los datos
+                        $country->setCode($data['code']);
+                        $country->setName($data['name']);
+                        $country->setFullname($data['fullname']);
+                        $country->setRegion($data['region']);
+                        $country->setSubregion($data['subregion']);
+                        $country->setArea($data['area']);
+                        $country->setPopulation($data['population']);
+                        $country->setFlag($data['flag']);
+                        $country->setCapital($data['capital']);
+                    }
+
+                    $languages = (array_key_exists('languages', $countryData)) ? $countryData['languages'] : [];
+                    $this->languageController->syncLanguages($country, $languages);
+
+                    $currencies = (array_key_exists('currencies', $countryData)) ? $countryData['currencies'] : [];
+                    $this->currencyController->syncCurrencies($country, $currencies);
+
+                    $entityManager->flush();
+                }
+
+                return $this->json(['success' => true, 'message' => 'Se ha realizado la sincronización exitosamente.']);
+
+            }
+
+            return $this->json($responseData);
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return $this->json(['success' => false, 'message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        
     }
 
 
@@ -155,17 +246,6 @@ class CountryController extends AbstractController
         if ( $edit ) return $this->redirectToRoute('app_country_view', ['id' => $country->getId()], Response::HTTP_SEE_OTHER);
         else         return $this->redirectToRoute('app_country');
     }
-
-
-    // ------------------- //
-    // -- FUNCIONES API -- //
-    // ------------------- //
-
-
-
-    // ------------------------ //
-    // -- FUNCIONES INTERNAS -- //
-    // ------------------------ //
 
     private function getLanguagesSelectOptions(Country $country) {
 

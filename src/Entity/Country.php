@@ -42,15 +42,6 @@ class Country
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $flag = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $alpha2code = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $alpha3code = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $numericcode = null;
-
     /**
      * @var Collection<int, Language>
      */
@@ -186,42 +177,6 @@ class Country
     public function setFlag(?string $flag): static
     {
         $this->flag = $flag;
-
-        return $this;
-    }
-
-    public function getAlpha2code(): ?string
-    {
-        return $this->alpha2code;
-    }
-
-    public function setAlpha2code(string $alpha2code): static
-    {
-        $this->alpha2code = $alpha2code;
-
-        return $this;
-    }
-
-    public function getAlpha3code(): ?string
-    {
-        return $this->alpha3code;
-    }
-
-    public function setAlpha3code(?string $alpha3code): static
-    {
-        $this->alpha3code = $alpha3code;
-
-        return $this;
-    }
-
-    public function getNumericcode(): ?int
-    {
-        return $this->numericcode;
-    }
-
-    public function setNumericcode(?int $numericcode): static
-    {
-        $this->numericcode = $numericcode;
 
         return $this;
     }

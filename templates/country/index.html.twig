@@ -5,7 +5,10 @@
 {% block body %}
     <h1>Countries</h1>
 
-    <a href="{{ path('app_country_create') }}" class="btn btn-primary">Create New Country</a>
+    <div class="table-actions text-end">
+        <button type="button" id="syncCountries" class="btn btn-sm btn-secondary">Sincronizar paises</button>
+        <a href="{{ path('app_country_create') }}" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Crear nuevo país"><i class="fa fa-plus"></i></a>
+    </div>
 
     <table class="table">
         <thead>
@@ -36,4 +39,11 @@
             {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('js/country/global_controller.js') }}"></script>
+
 {% endblock %}

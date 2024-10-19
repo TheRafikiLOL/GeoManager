@@ -24,9 +24,6 @@ class CountryType extends AbstractType
             ->add('area')
             ->add('population')
             ->add('flag')
-            ->add('alpha2code')
-            ->add('alpha3code')
-            ->add('numericcode')
             /*->add('languages', EntityType::class, [
                 'class' => Language::class,
                 'choice_label' => 'name',

@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    function loadPageModal(title = "", message = "", cancelText = "Cancelar", cancelClass = "secondary", actionText = "", actionClass="", actionFunction = "") {
+        $('#pageModalLabel').text(title);
+        
+        $('.modal-body').html(message);
+
+        $('.modal-footer').empty();
+
+        if (cancelText) {
+            $('.modal-footer').append(`
+                <button type="button" class="btn btn-${cancelClass} close-modal" data-dismiss="modal">${cancelText}</button>
+            `);
+        }
+
+        if (actionText && actionFunction) {
+            $('.modal-footer').append(`
+                <button type="button" id="confirmAction" class="btn btn-${actionClass}">${actionText}</button>
+            `);
+        }
+
+        $('#pageModal').modal('show');
+        
+        $('#confirmAction').off('click').on('click', function() {
+            if (actionFunction && typeof actionFunction === 'function') {
+                actionFunction();
+            }
+            $('#pageModal').modal('hide');
+        });
+
+        $('.close, .close-modal').off('click').on('click', function() {
+            $('#pageModal').modal('hide');
+        });
+    }
+
+</script>
