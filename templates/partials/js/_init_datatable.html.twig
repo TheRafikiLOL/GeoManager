@@ -1,0 +1,32 @@
+<script>
+
+    $(document).ready(function() {
+        var table = $('{{ tableId }}').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ path(datatablePath) }}',
+                type: 'GET'
+            },
+            columns: {{ columns|json_encode|raw }},
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
+            },
+            order: {{ orderColumn|raw }},
+            initComplete: function() {
+                var api = this.api();
+                api.columns().every(function(index) {
+                    if ({{ filterColumnIndices|json_encode|raw }}.includes(this.index())) {
+                        var column = this;
+                        $('input', $(column.footer())).on('keyup change clear', function() {
+                            if (column.search() !== this.value) {
+                                column.search(this.value).draw();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+</script>

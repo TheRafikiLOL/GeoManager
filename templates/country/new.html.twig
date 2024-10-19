@@ -1,0 +1,18 @@
+{% block title %}Nuevo País{% endblock %}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Nuevo País</h1>
+
+    {% include 'country/_form.html.twig' with {'saveAction':'Crear', 'class':'success'} %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'partials/js/_init_select2.html.twig' with {'fieldId':'#country_languages', 'url':'/autocomplete/languages'} %}
+    {% include 'partials/js/_init_select2.html.twig' with {'fieldId':'#country_currencies', 'url':'/autocomplete/currencies'} %}
+
+{% endblock %}

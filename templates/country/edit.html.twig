@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar País - {{country.name}}{% endblock %}
+
+{% block body %}
+    <h1>Editar País - {{country.name}}</h1>
+
+    {% include 'country/_form.html.twig' with {'saveAction': 'Editar', 'class':'primary'} %}
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'partials/js/_init_select2.html.twig' with {'fieldId':'#country_languages', 'url':'/autocomplete/languages'} %}
+    {% include 'partials/js/_init_select2.html.twig' with {'fieldId':'#country_currencies', 'url':'/autocomplete/currencies'} %}
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles del País - {{ country.name }}{% endblock %}
+
+{% block body %}
+    <h1>Detalles del País</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">{{ country.name }} ({{ country.code }})</h5>
+            {% if country.flag is defined and country.flag is not null %}
+                <img class="table-flag" src="{{ country.flag starts with 'uploads/' ? '/' ~ country.flag : country.flag }}" alt="">
+            {% else %}
+                <p>Sin bandera disponible</p>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><strong>Nombre Completo:</strong></h6>
+                    <p>{{ country.fullname }}</p>
+                    <h6><strong>Región:</strong></h6>
+                    <p>{{ country.region }}</p>
+                    <h6><strong>Subregión:</strong></h6>
+                    <p>{{ country.subregion }}</p>
+                    <h6><strong>Capital:</strong></h6>
+                    <p>{{ country.capital }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6><strong>Área:</strong></h6>
+                    <p>{{ country.area }} km²</p>
+                    <h6><strong>Población:</strong></h6>
+                    <p>{{ country.population }}</p>
+                    <h6><strong>Idiomas:</strong></h6>
+                    <p>
+                        {% if country.languages is defined %}
+                            {{ country.languages|map(language => language.name ~ ' (' ~ language.code ~ ')')|join(', ') }}
+                        {% else %}
+                            Sin idiomas
+                        {% endif %}
+                    </p>
+                    <h6><strong>Monedas:</strong></h6>
+                    <p>
+                        {% if country.currencies is defined %}
+                            {{ country.currencies|map(currency => currency.name ~ ' (' ~ currency.code ~ ')')|join(', ') }}
+                        {% else %}
+                            Sin monedas
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <a href="{{ path('app_country') }}" class="btn btn-secondary">Volver a la lista</a>
+            <a href="{{ path('app_country_edit', {'id': country.id}) }}" class="btn btn-primary">Editar</a>
+        </div>
+    </div>
+{% endblock %}
