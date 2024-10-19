@@ -18,13 +18,13 @@ final class Version20241018223254 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE country MODIFY area INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE country ADD capital VARCHAR(255) DEFAULT NULL AFTER subregion');
+        $this->addSql('ALTER TABLE currency ADD code VARCHAR(50) NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // Revert the changes made in the up() method
         $this->addSql('ALTER TABLE country MODIFY area VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE country DROP COLUMN capital');
+        $this->addSql('ALTER TABLE currency DROP code');
     }
 }
