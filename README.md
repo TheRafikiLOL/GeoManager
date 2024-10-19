@@ -3,7 +3,7 @@
 ## Índice
 
 - [Descripción del proyecto](#descripción-del-proyecto)
-- [Versiones utilizadas](#descripción-del-proyecto)
+- [Versiones utilizadas](#versiones-utilizadas)
 - [Puesta en marcha](#puesta-en-marcha)
   - [Descargar el repositorio](#descargar-el-repositorio)
   - [Preparar el proyecto](#preparar-el-proyecto)
