@@ -21,12 +21,18 @@
     <script src="{{ asset('vendor/datatables/datatables.min.js') }}"></script>
     {% include 'partials/js/_init_datatable.html.twig' with {
         'tableId': '#countriesTable',
+        'datatablePath': 'datatable_countries_all',
         'orderColumn': "[1, 'asc']",
-        'columnDefs': [
-            {'orderable': 0, 'targets': [0, 6]},
-            {'orderable': 1, 'targets': [1, 2, 3, 4, 5]},
+        'columns': [
+            { 'data': 'flag', 'orderable': false },
+            { 'data': 'name' },
+            { 'data': 'region' },
+            { 'data': 'subregion' },
+            { 'data': 'area' },
+            { 'data': 'population' },
+            { 'data': 'actions', 'orderable': false }
         ],
-        'searchableColumns': [1, 2, 3, 4, 5]
+        'filterColumnIndices': [1, 2, 3, 4, 5]
     } %}
 
     {# Removal System #}

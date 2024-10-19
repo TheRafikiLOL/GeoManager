@@ -4,6 +4,8 @@
     $('.dataTable').on('click', '.remove-country', function(e) {
         e.preventDefault();
 
+        $table = $(this).closest('.dataTable');
+
         let deleteUrl = $(this).data('url');
         let csrfToken = $(this).data('token');
         
@@ -17,16 +19,14 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Recargar la tabla o el listado
-                        let $table = $(this).closest('.dataTable').DataTable();
-                        $table.ajax.reload();
+                        $table.DataTable().ajax.reload();
+                        loadToast("Registro eliminado", "El registro ha sido eliminado.");
                     } else {
                         alert('Error: ' + response.message);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error en la eliminación:", error);
-                    alert('Ocurrió un error. Por favor, inténtelo de nuevo.');
+                    loadToast("ERROR", "Ocurrió un error. Por favor, inténtelo de nuevo.");
                 }
             });
 

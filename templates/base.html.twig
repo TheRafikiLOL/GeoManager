@@ -46,6 +46,7 @@
             {% endblock %}
         </div>
 
+        {% include 'partials/_loader.html.twig' %}
         {% include 'partials/_modal.html.twig' %}
 
         <footer class="bg-dark text-white text-center py-3 mt-4">
@@ -64,6 +65,8 @@
         </script>
         {# Bootstrap modal #}
         {% include 'partials/js/_load_page_modal.html.twig' %}
+        {# Bootstrap toast #}
+        <script src="{{ asset('js/global/toast_system.js') }}"></script>
         {# Select2 JS #}
         <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
 

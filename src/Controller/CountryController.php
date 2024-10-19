@@ -45,9 +45,7 @@ class CountryController extends AbstractController
 
         $countries = $countryRepository->findAll();
 
-        return $this->render('country/index.html.twig', [
-            'countries' => $countries,
-        ]);
+        return $this->render('country/index.html.twig', [ ]);
     }
 
     #[Route('/new', name: 'app_country_create')]

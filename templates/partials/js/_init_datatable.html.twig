@@ -1,30 +1,22 @@
 <script>
 
     $(document).ready(function() {
-        var table = $('#countriesTable').DataTable({
+        var table = $('{{ tableId }}').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{{ path('datatable_countries_all') }}',
+                url: '{{ path(datatablePath) }}',
                 type: 'GET'
             },
-            columns: [
-                { data: 'flag', orderable: false },
-                { data: 'name' },
-                { data: 'region' },
-                { data: 'subregion' },
-                { data: 'area' },
-                { data: 'population' },
-                { data: 'actions', orderable: false }
-            ],
+            columns: {{ columns|json_encode|raw }},
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
             },
-            order: [[1, 'asc']],
+            order: {{ orderColumn|raw }},
             initComplete: function() {
                 var api = this.api();
                 api.columns().every(function(index) {
-                    if (this.index() > 0 && this.index() < 6) {
+                    if ({{ filterColumnIndices|json_encode|raw }}.includes(this.index())) {
                         var column = this;
                         $('input', $(column.footer())).on('keyup change clear', function() {
                             if (column.search() !== this.value) {
@@ -36,40 +28,5 @@
             }
         });
     });
-
-    /*$(document).ready(function() {
-        var table = $('{{ tableId }}').DataTable({
-            ordering: true,
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
-            },
-            order: [{{ orderColumn|raw }}],
-            columnDefs: [
-                {% for col in columnDefs %}
-                    { orderable: {{ col.orderable|lower }}, targets: {{ col.targets|json_encode|raw }} },
-                {% endfor %}
-                { responsivePriority: 1, targets: -1 }
-            ],
-            responsive: {
-                details: {
-                    type: 'column',
-                    target: -1
-                }
-            },
-            initComplete: function() {
-                var api = this.api();
-                api.columns().every(function(index) {
-                    if (this.index() in {{ searchableColumns|json_encode }}) {
-                        var column = this;
-                        $('input', $(column.footer())).on('keyup change clear', function() {
-                            if (column.search() !== this.value) {
-                                column.search(this.value).draw();
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    });*/
 
 </script>
