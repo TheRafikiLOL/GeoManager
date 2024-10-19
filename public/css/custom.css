@@ -1,12 +1,24 @@
+/* -- STICKY FOOTER -- */
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+} 
+
+.container{
+    flex-grow: 1;
+}
+
+
 /* -- BOOTSTRAPP -- */
 
 .btn-info {
     color: #FFF!important;
 }
 
-/* -- COUNTRIES -- */
 
-/* - Datatable */
+/* -- DATATABLE -- */
 
 #countriesTable img.table-flag {
     max-width: 80px;

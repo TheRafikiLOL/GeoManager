@@ -55,7 +55,7 @@ class CountryController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            self::manageRegister($country, $request, $countryRepository);
+            return  self::manageRegister($country, $request, $countryRepository);
         }
 
         return $this->render('country/new.html.twig', [
@@ -83,7 +83,7 @@ class CountryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            self::manageRegister($country, $request, $countryRepository, true, $oldFilePath);
+            return  self::manageRegister($country, $request, $countryRepository, true, $oldFilePath);
         }
 
         return $this->render('country/edit.html.twig', [
@@ -187,7 +187,7 @@ class CountryController extends AbstractController
     // -- FUNCIONES INTERNAS -- //
     // ------------------------ //
 
-    private function manageRegister(Country $country, Request $request, CountryRepository $countryRepository, $edit = false, $oldFilePath) {
+    private function manageRegister(Country $country, Request $request, CountryRepository $countryRepository, $edit = false, $oldFilePath = "") {
 
         // Control de relaciones en idiomas
         $languagesIds = $request->get('languages', []);
@@ -224,7 +224,7 @@ class CountryController extends AbstractController
         if ( !$edit ) {
             foreach ($currenciesIds as $currencyId) {
                 $currency = $currencyRepository->find($currencyId);
-                $country->addCurrency($language);
+                $country->addCurrency($currency);
             }
         } else {
             $existingCurrencies = $country->getCurrencies()->toArray();
@@ -259,16 +259,15 @@ class CountryController extends AbstractController
             
             $file->move($directory, $filename);
             $country->setFlag('uploads/flags/' . $filename);
+        } else {
+            $country->setFlag($oldFilePath);
         }
 
-
-        
-        $countryRepository->save($country, true);
+        $this->entityManager->persist($country);
         $this->entityManager->flush();
-        
 
-        if ( $edit ) return $this->redirectToRoute('app_country_view', ['id' => $country->getId()], Response::HTTP_SEE_OTHER);
-        else         return $this->redirectToRoute('app_country');
+        return $this->redirectToRoute('app_country_view', ['id' => $country->getId()]);
+        
     }
 
     private function getLanguagesSelectOptions(Country $country) {
