@@ -1,0 +1,38 @@
+<script type="text/javascript">
+
+    // Cargar funcionamiento de eliminación por modal
+    $('.dataTable').on('click', '.remove-country', function(e) {
+        e.preventDefault();
+
+        let deleteUrl = $(this).data('url');
+        let csrfToken = $(this).data('token');
+        
+        loadPageModal("{{ title }}", "{{ message }}", "Cancelar", "secondary", "Eliminar", "danger", function() {
+
+            $.ajax({
+                url: deleteUrl,
+                type: 'DELETE',
+                data: {
+                    _token: csrfToken
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Recargar la tabla o el listado
+                        let $table = $(this).closest('.dataTable').DataTable();
+                        $table.ajax.reload();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la eliminación:", error);
+                    alert('Ocurrió un error. Por favor, inténtelo de nuevo.');
+                }
+            });
+
+        });
+        $('#pageModal').modal('hide');
+        
+    });
+
+</script>

@@ -16,6 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 #[Route('/countries')]
 class CountryController extends AbstractController
@@ -91,15 +93,17 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_country_delete', methods: ['POST'])]
-    public function delete(Request $request, Country $country, CountryRepository $countryRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$country->getId(), $request->request->get('_token'))) {
+    #[Route('/{id}/delete', name: 'app_country_delete', methods: ['DELETE'])]
+    public function delete(Request $request, Country $country, CountryRepository $countryRepository): JsonResponse {
+        if ($this->isCsrfTokenValid('delete' . $country->getId(), $request->request->get('_token'))) {
             $countryRepository->remove($country);
+            
+            return $this->json(['success' => true, 'message' => 'El país ha sido eliminado.']);
         }
 
-        return $this->redirectToRoute('app_country', [], Response::HTTP_SEE_OTHER);
+        return $this->json(['success' => false, 'message' => 'CSRF token inválido.'], JsonResponse::HTTP_FORBIDDEN);
     }
+    
 
 
     // ------------------- //

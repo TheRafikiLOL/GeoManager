@@ -6,65 +6,18 @@
     <h1>Paises</h1>
 
     <div class="table-actions text-end">
-        <button type="button" id="syncCountries" class="btn btn-sm btn-secondary">Sincronizar paises</button>
+        <button type="button" id="syncCountries" class="btn btn-sm btn-info">Sincronizar paises</button>
         <a href="{{ path('app_country_create') }}" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Crear nuevo país"><i class="fa fa-plus"></i></a>
     </div>
 
-<div class="table-responsive">
-    <table id="countriesTable" class="table table-striped datatable">
-        <thead>
-            <tr>
-                <th>Bandera</th>
-                <th>Nombre</th>
-                <th>Región</th>
-                <th>Subregión</th>
-                <th>Área</th>
-                <th>Población</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th></th>
-                <th><input type="text" placeholder="Filtrar nombre" /></th>
-                <th><input type="text" placeholder="Filtrar región" /></th>
-                <th><input type="text" placeholder="Filtrar subregión" /></th>
-                <th><input type="text" placeholder="Filtrar área" /></th>
-                <th><input type="text" placeholder="Filtrar población" /></th>
-                <th></th>
-            </tr>
-        </tfoot>
-        <tbody>
-            {% for country in countries %}
-                <tr>
-                    <td>{% if country.flag is defined and country.flag is not null %}<img class="table-flag" src="{{ country.flag }}" alt="{{ country.code }}">{% endif %}</td>
-                    <td>{{ country.name }}</td>
-                    <td>{{ country.region }}</td>
-                    <td>{{ country.subregion }}</td>
-                    <td>{{ country.area }}</td>
-                    <td>{{ country.population }}</td>
-                    <td>
-                        <a href="{{ path('app_country_view', {'id': country.id}) }}" class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fa fa-eye"></i></a>
-                        <a href="{{ path('app_country_edit', {'id': country.id}) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-edit"></i></a>
-                        <form action="{{ path('app_country_delete', {'id': country.id}) }}" method="post" style="display:inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ country.id) }}">
-                            <button class="btn btn-sm btn-danger" type="submit" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash"></i></button>
-                        </form>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7">No countries found.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    {% include 'country/_index_table.html.twig' %}
+    
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
+    {# Datatable #}
     <script src="{{ asset('vendor/datatables/datatables.min.js') }}"></script>
     {% include 'partials/js/_init_datatable.html.twig' with {
         'tableId': '#countriesTable',
@@ -74,6 +27,12 @@
             {'orderable': 1, 'targets': [1, 2, 3, 4, 5]},
         ],
         'searchableColumns': [1, 2, 3, 4, 5]
+    } %}
+
+    {# Removal System #}
+    {% include 'partials/js/_load_removal_system.html.twig' with {
+        'title': 'Eliminar país',
+        'message': 'El registro del país se va a eliminar. Esta acción es irreversible.'
     } %}
 
     <script src="{{ asset('js/country/global_controller.js') }}"></script>
